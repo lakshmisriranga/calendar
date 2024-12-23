@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.calendar {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUlF-JGLGAUUgrS_9auPrNWM3FL9AWIT_YXw&s);
+    color: deepskyblue;
+    font-weight: bold;
+    background-size: cover;
+    width: 1000px;
+    border-radius: 8px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#monthYear {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#calendarTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#calendarTable th, #calendarTable td {
+    padding: 10px;
+    text-align: center;
+    width: 20.28%;
+}
+
+#calendarTable td {
+    cursor: pointer;
+}
+
+#calendarTable td:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+</style>
+<body>
+    <div class="calendar">
+        <header>
+            <button id="prevMonth">←</button>
+            <h2 id="monthYear"></h2>
+            <button id="nextMonth">→</button>
+        </header>
+        <table id="calendarTable">
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Calendar days will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+<script>
+
+const monthYearDisplay = document.getElementById('monthYear');
+const calendarTable = document.getElementById('calendarTable').getElementsByTagName('tbody')[0];
+const prevMonthButton = document.getElementById('prevMonth');
+const nextMonthButton = document.getElementById('nextMonth');
+
+let currentDate = new Date();
+
+function updateCalendar() {
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+    
+    monthYearDisplay.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+    // Clear the table
+    calendarTable.innerHTML = '';
+
+    // Get first day of the month and number of days in the month
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const totalDays = lastDay.getDate();
+    const startDay = firstDay.getDay();
+
+    let row = calendarTable.insertRow();
+    let cellCount = 0;
+
+    // Empty cells before the start of the month
+    for (let i = 0; i < startDay; i++) {
+        row.insertCell();
+        cellCount++;
+    }
+
+    // Fill the calendar with days
+    for (let day = 1; day <= totalDays; day++) {
+        if (cellCount === 7) {
+            row = calendarTable.insertRow();
+            cellCount = 0;
+        }
+
+        const cell = row.insertCell();
+        cell.textContent = day;
+        cell.onclick = () => alert(`You selected ${month + 1}/${day}/${year}`);
+
+        cellCount++;
+    }
+}
+
+prevMonthButton.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    updateCalendar();
+});
+
+nextMonthButton.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    updateCalendar();
+});
+
+updateCalendar();
+
+</script>
+</html>
